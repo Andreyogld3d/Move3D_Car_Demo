@@ -1,0 +1,3 @@
+[submodule "Move3D"]
+	path = Move3D
+	url = https://github.com/Andreyogld3d/Move3D.git
