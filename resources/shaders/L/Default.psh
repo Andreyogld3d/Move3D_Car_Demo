@@ -1,0 +1,8 @@
+<!--3DMove-->
+<PixelShader>
+	PixelShader ShadowCasterPS/
+	EntryPoint psMain/
+	SourceFile L\DefaultPs.hlsl/
+
+   
+</PixelShader>

@@ -1,0 +1,70 @@
+#define CALCULATE_BINORMAL
+
+
+uniform float4x4 ModelViewProjection : register(c0); // the model*view*projection matrix
+uniform float4 LightDir : register(c4);        //Light position in world space
+uniform float4x4 MatTexture: register(c5);
+uniform float4 CameraPosition : register(c9);
+
+#ifndef INSTANSING
+uniform float4x4 WorldMatrix : register(c10);
+#endif
+
+struct PS {
+	float4 position     : POSITION;   
+	float2 uv0          : TEXCOORD0; 
+	float3 LightDir		: TEXCOORD1;
+	float4 shadowCrd	: TEXCOORD2;
+	float3 ViewDir 		: TEXCOORD3;
+	float3 worldNormal  : TEXCOORD6;
+};
+
+struct Vs_input {
+	float4 position : POSITION;
+	float2 uv0 		: TEXCOORD0; 
+	float3 normal 	: NORMAL; 
+	float4 tangent 	: TANGENT;
+#ifdef INSTANSING
+	float4 v0 		: TRANSFORM0;
+	float4 v1 		: TRANSFORM1;
+	float4 v2 		: TRANSFORM2;
+#endif
+};
+
+
+PS vsMain(Vs_input input){
+
+	PS vsOut = (PS)0;
+	
+	float4 pos = float4(input.position.xyz, 1.0f); 
+	
+#ifdef INSTANSING
+	const float4x4 WorldMatrix = float4x4(
+	float4(input.v0.x, input.v1.x, input.v2.x, 0.0f), 
+	float4(input.v0.y, input.v1.y, input.v2.y, 0.0f), 
+	float4(input.v0.z, input.v1.z, input.v2.z, 0.0f), 
+	float4(input.v0.w, input.v1.w, input.v2.w, 1.0f));
+	
+	float4 WorldPos = mul(pos, WorldMatrix);
+	vsOut.position = mul(WorldPos, ModelViewProjection);
+	vsOut.shadowCrd = mul(WorldPos, MatTexture);
+#else
+	vsOut.position = mul(pos, ModelViewProjection);
+	vsOut.shadowCrd = mul(pos, MatTexture);
+	float4 WorldPos = mul(pos, WorldMatrix);
+#endif
+	vsOut.uv0 = input.uv0;
+
+	vsOut.ViewDir = CameraPosition.xyz - WorldPos.xyz;
+	vsOut.LightDir = -LightDir.xyz;
+
+	float3 binormal = cross(input.normal, input.tangent.xyz) * input.tangent.w;
+	float3x3 TBNMatrix = float3x3(normalize(input.tangent.xyz), normalize(binormal), normalize(input.normal)); 
+	
+	//Move view and light directons to tangent space
+	vsOut.LightDir = mul(TBNMatrix, vsOut.LightDir.xyz);
+	vsOut.ViewDir  = mul(TBNMatrix, vsOut.ViewDir);
+	
+	return vsOut;
+}
+

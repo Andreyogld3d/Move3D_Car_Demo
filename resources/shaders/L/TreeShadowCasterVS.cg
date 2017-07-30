@@ -1,0 +1,94 @@
+//
+//#define INSTANSING
+
+struct PS {
+	float4 position     : POSITION;         // position in projection space
+	float2 uv0          : TEXCOORD0;        // texture coordinate
+	float3 LightDir	: TEXCOORD1;        // texture coordinat;
+	float4 shadowCrd: TEXCOORD2;
+	float3 ViewDir : TEXCOORD3;
+#ifdef FOG
+	float  fogExponent  : TEXCOORD5;
+#endif
+	float3 worldNormal  : TEXCOORD6;
+};
+
+uniform float4x4 ModelViewProjection : register(c0);
+uniform float4 time_0_X : register(c4);
+uniform float4 LightDir : register(c5);
+uniform float4x4 MatTexture: register(c6);
+uniform float4 CameraPosition : register(c10);
+#ifndef INSTANSING
+uniform float4x4 WorldMatrix : register(c11);
+#endif
+
+#ifdef FOG
+uniform float4 fogColor : register(c17) = float4(0.8f, 0.9f, 0.8f, 1.0f);
+#endif
+
+
+struct Vs_input {
+	float4 position : POSITION;
+	float2 uv0 		: TEXCOORD0; 
+	float3 normal 	: NORMAL; 
+	float4 tangent 	: TANGENT;
+#ifdef INSTANSING
+	float4 v0 		: TRANSFORM0;
+	float4 v1 		: TRANSFORM1;
+	float4 v2 		: TRANSFORM2;
+#endif
+};
+
+
+PS vsMain(Vs_input input){
+	PS vsOut;
+	
+	
+	float4 pos = float4(input.position.xyz, 1.0f); 
+	
+#ifdef INSTANSING
+	//что бы не транспонировать в шейдере, передавай сразу транспонирвоанные данные
+	const float4x4 WorldMatrix = transpose(float4x4(input.v0, input.v1, input.v2, float4(0,0,0,1)));
+#endif
+
+	float4 objectPos = WorldMatrix[3];
+
+	float val = (objectPos.x + objectPos.z);
+	float angle = time_0_X.x + val;
+	float Sin_ = sin(angle) * input.position.y;
+	float Cos_ = cos(angle) * input.position.y;
+	const half k = 0.006;
+	//pos.x += (Sin_ * k);
+	//pos.z += (Cos_ * k);
+	//pos.y += 10;
+	//Compute world space position
+	float4 worldPos = mul(pos, WorldMatrix);
+	
+#ifdef INSTANSING
+	vsOut.position = mul(worldPos, ModelViewProjection);
+	vsOut.shadowCrd = mul(worldPos, MatTexture);
+#else
+	vsOut.position = mul(pos, ModelViewProjection);
+	vsOut.shadowCrd = mul(pos, MatTexture);
+#endif
+
+
+	vsOut.uv0 = input.uv0;
+    vsOut.ViewDir = CameraPosition.xyz - worldPos.xyz;
+	vsOut.LightDir = -LightDir.xyz;
+
+	float3 binormal = cross(input.normal, input.tangent.xyz) * input.tangent.w;
+	
+	float3x3 TBNMatrix = float3x3(normalize(input.tangent.xyz), normalize(binormal), normalize(input.normal)); 
+	
+	//TBNMatrix = mul(TBNMatrix, (float3x3)WorldMatrix);
+
+	//Move view and light directons to tangent space
+	vsOut.LightDir = mul(TBNMatrix, vsOut.LightDir.xyz);
+	vsOut.ViewDir  = mul(TBNMatrix, vsOut.ViewDir);
+
+	
+	vsOut.worldNormal = input.normal.xyz;
+	
+	return vsOut;
+}

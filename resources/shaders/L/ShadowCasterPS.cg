@@ -1,0 +1,117 @@
+//
+
+//uniform sampler2D colorSampler : register(s0);
+//uniform sampler2D bump : register(s1);
+//uniform sampler2D ShadowMap : register(s2);
+
+#include "test.h"
+
+DeclTex2D(colorSampler, 0);
+DeclTex2D(bump, 1);
+DeclTex2D(ShadowMap, 2);
+
+#define LIGHT
+#define SPECULAR
+//#define PCF
+
+//Vertex shader to pixel shader
+//
+struct PS {
+	float4 position     : POSITION;         // position in projection space
+	float2 uv0          : TEXCOORD0;        // texture coordinate
+	float3 LightDir	: TEXCOORD1;        // texture coordinat;
+	float4 shadowCrd: TEXCOORD2;
+	float3 ViewDir : TEXCOORD3;
+#ifdef ALPAHA_TEST
+	//float AlphaRef :  TEXCOORD4;
+#endif
+#ifdef FOG
+	float  fogExponent  : TEXCOORD5;
+#endif
+};
+
+#define PI_ 3.14159265358979
+
+//float roughness_to_phong_power(float roughness)
+//{
+//	return (2.0f / pow(roughness, 4.0f)) - 2.0f;
+//}
+
+float phong_normalization(float p)
+{
+	return ((p + 2.0f) * (p + 4.0f)) / (8.0f * PI_* (pow(2.0f, -p / 2.0f) + p));
+}
+
+float4 psMain(in PS In) : COLOR
+{
+	float4 albedo = tex2D(colorSampler, In.uv0);
+#ifdef ALPHA_TEST
+	if (albedo.a < 0.5f) {
+		discard;
+	}
+#endif
+#ifdef LIGHT
+
+	float4 shadowCrd = In.shadowCrd;
+#ifdef PCF
+	float shadowColor = 0.8f;
+	float sh = PCFFilter(4.0, ShadowMap, shadowCrd, shadowColor);
+#else
+	float shadowColor = 0.5f;
+	shadowCrd.xyz /= shadowCrd.w;
+	float shadow = tex2D(ShadowMap, shadowCrd.xy).r;
+	float sh = shadow < shadowCrd.z - 0.001f ? shadowColor : 1.0f;
+#endif
+#define VARIANT1
+#ifdef VARIANT1
+	float3 L = normalize(In.LightDir);
+	float3 V = normalize(In.ViewDir);
+	
+	float3 N = normalize(2.0f * tex2D(bump, In.uv0).rgb - 1.0f);	
+	float3 H = normalize(L + V);
+	
+	float lambert = max(0.0f, dot(L, N));
+	
+	float roughness = 0.9f;
+	float p = roughness_to_phong_power(roughness);
+	
+	float phong = pow(max(0.0f, dot(N, H)), p) * phong_normalization(p);
+	
+	float3 light_color = float3(1.0f, 1.0f, 1.0f) ;
+	
+	float3 ambient_color = float3(0.2f, 0.2f, 0.2f);
+	
+	float specular_intensity = 0.1f;
+	float3 diffuse = albedo.rgb * lambert * light_color;
+	float4 Color = float4(diffuse + ambient_color * albedo.rgb, albedo.a);
+#ifdef SPECULAR
+	float3 specular = phong * light_color * specular_intensity;
+	Color.xyz += specular;
+#endif
+	Color.xyz *= sh;
+	return Color;
+#else
+	//float sh = shadow;
+	float3 LightDir = -normalize(In.LightDir);
+	const float Ambient = 0.2;          // Ambient amount of lighting
+
+	//Uncompress the normal map
+	float3 Normal = 2.0 * tex2D(bump, In.uv0).rgb - 1.0f;
+
+   	// Compute lighting amount
+   	float Diffuse = clamp(dot(Normal, LightDir), 0.0f, 1.0f);
+	float factor = Diffuse * sh + Ambient;
+#ifdef SPECULAR
+	if (Diffuse > 0.0f) {
+		float3 viewDir = normalize(In.ViewDir);
+		float3 halfVector = normalize(Normal + viewDir);
+		float specFactor = pow(clamp(dot(LightDir, halfVector), 0.0f, 1.0f), 6.0f);
+		factor += specFactor;
+	}
+#endif
+	albedo.rgb *= factor;
+	return albedo;
+#endif
+#endif
+	return albedo;
+}

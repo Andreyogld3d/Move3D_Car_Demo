@@ -1,0 +1,6 @@
+<!--3DMove-->
+<PixelShader>
+	PixelShader DepthPassPS/
+	EntryPoint psMain/
+	SourceFile DepthPassPS.cg/
+</PixelShader>

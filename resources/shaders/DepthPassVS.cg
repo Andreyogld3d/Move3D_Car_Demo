@@ -1,0 +1,29 @@
+//
+uniform float4x4 worldViewProjMatrix : register(c0);
+uniform float4 ZNearZFar : register(c4);
+
+
+struct vs_output {
+   float4 Pos: POSITION;
+   float3 Depth: TEXCOORD0;
+};
+
+#ifdef INSTANCING
+vs_output vsMain(in float4 Pos: POSITION, 
+	in float4 v0 : TRANSFORM0, in float4 v1 : TRANSFORM1, in float4 v2 : TRANSFORM2)
+#else
+vs_output vsMain(in float4 Pos: POSITION)
+#endif
+{
+	vs_output Out;
+	float4 pos = float4(Pos.xyz, 1.0f); 
+#ifdef INSTANCING
+	const float4x4 WorldMatrix = float4x4(float4(v0.x, v1.x, v2.x, 0.0f), float4(v0.y, v1.y, v2.y, 0.0f), float4(v0.z, v1.z, v2.z, 0.0f), float4(v0.w, v1.w, v2.w, 1.0f));
+	float4 WorldPos = mul(pos, WorldMatrix);
+	Out.Pos = mul(WorldPos, worldViewProjMatrix);
+#else
+	Out.Pos = mul(pos, worldViewProjMatrix);
+#endif
+	Out.Depth = float3(Out.Pos.z, ZNearZFar.x, ZNearZFar.y);
+	return Out;
+}

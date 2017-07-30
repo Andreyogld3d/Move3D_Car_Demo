@@ -1,0 +1,26 @@
+<!--3DMove-->
+<Material EnableCullFace = "false" EnableWriteDepth="false">
+  <VertexShader>
+    VertexShader VSSky/
+    EntryPoint vsMain/
+    SourceFile L\sky.hlsl/
+    <VertexShaderParameters>
+      ParamNameAuto worldViewProj WorldViewProjMatrix/
+      ParamNameAuto time Time/
+    </VertexShaderParameters>
+  </VertexShader>
+	<PixelShader>
+		PixelShader PSSky/
+		Language cg/
+		EntryPoint psMain/
+		SourceFile L\sky.hlsl/
+		Profile ps_2_0 glslf/
+	</PixelShader>
+	<TextureSampler TexCoordIndex = "0" _TextureAdressU = "Wrap" _TextureAdressV = "Wrap"
+		FileName = "resources/texture/SkyDiffuseMap.dds"
+		MinFilter = "Anisotropic"
+		MagFilter = "Anisotropic"
+	  MipFilter = "Anisotropic"
+		MaxAnisotropy = "16"
+	/>
+</Material>

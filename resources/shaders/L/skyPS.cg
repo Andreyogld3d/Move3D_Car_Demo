@@ -1,0 +1,35 @@
+//
+//uniform sampler2D cloud;
+DeclTex2D(cloud, 0);
+
+struct PS {
+	float4 position  : POSITION;
+    float2 texCoord0 : TEXCOORD0;    
+    float2 texCoord1 : TEXCOORD1;
+    float2 intensity : TEXCOORD2;
+	float3 localPos  : TEXCOORD3;
+};
+
+//////////////////////////////////////////////////////////////
+//Pixel Shader
+//////////////////////////////////////////////////////////////
+float4 psMain(in PS IN) : COLOR
+{
+	/*static const float4 horizon = {0.9f, 0.7f, 0.7f, 1.0f};
+	float4 clouds_0 = tex2D(cloud, IN.texCoord0);
+	float4 clouds_1 = tex2D(cloud, IN.texCoord1);	
+   	float4 clouds = (clouds_0 + clouds_1) * IN.intensity.y;
+   	float4 cloud_color = float4((1.0 - IN.intensity.x) * horizon.x, (1.0 - IN.intensity.x) * horizon.y, IN.intensity.x * horizon.z, 0.0);
+   	//return cloud_color * (1.0 - clouds.x) + clouds;	
+   	return cloud_color * (1.0 - saturate(clouds.x)) + clouds;*/
+	
+	float y = normalize(IN.localPos).y;
+	float h = pow(y, 0.8);
+	
+	clip(y);
+	
+	float3 color1 = float3(0.5,0.5,1);
+	float3 color2 = float3(1,1,1);
+	
+	return float4(lerp(color2, color1, h), 1);
+}

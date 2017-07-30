@@ -1,0 +1,47 @@
+<!--3DMove-->
+<Material
+	MaterialName = "Car"
+	Ambient = "0.588000 0.588000 0.588000 1.000000"
+	Diffuse = "1.000000 1.000000 1.000000 1.000000"
+	Emission = "0.000000 0.000000 0.000000 1.000000"
+	Shininess = "0.100000"
+	LightEnabled = "true" >
+	<TextureSampler
+      FileName = "texture/White.dds"
+      MinFilter = "Anisotropic"
+      MagFilter = "Anisotropic"
+      MipFilter = "Anisotropic"
+      MaxAnisotropy = "16"
+	/>
+	<TextureSampler
+      FileName = "texture/FlatBump.dds" TextureClipDistance = "300"
+      MinFilter = "Anisotropic"
+      MagFilter = "Anisotropic"
+      MipFilter = "Anisotropic"
+      MaxAnisotropy = "16"
+	/>
+  <TextureSampler
+      FileName = "texture/SkyDiffuseMap.dds"
+      MinFilter = "Anisotropic"
+      MagFilter = "Anisotropic"
+      MipFilter = "Anisotropic"
+      MaxAnisotropy = "16"
+	/>
+  <TextureSampler
+     FileName = "texture/SkySpecularMap.dds"
+     MinFilter = "Anisotropic"
+     MagFilter = "Anisotropic"
+     MipFilter = "Anisotropic"
+     MaxAnisotropy = "16"
+	/>
+  <DepthShadowMapPixelShader FileName = "L/DepthShadow.psh"/>
+	<DepthShadowMapVertexShader FileName = "L/DepthShadow.vsh"/>
+	<ShadowCasterPixelShader FileName = "L/Default.psh"/>
+	<ShadowCasterVertexShader FileName = "L/Default.vsh"/>
+	<DepthPassVertexShader FileName = "DepthPassVS.vsh" />
+	<DepthPassPixelShader FileName = "DepthPassPS.psh" />
+	<Fog FogColor = "0.8f 0.9f 0.8f 1.0f" FogDensity = "0.08f" />
+</Material>
+
+
+

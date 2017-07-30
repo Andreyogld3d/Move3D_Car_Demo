@@ -1,0 +1,23 @@
+//
+
+float4 StoreZValueToColor(float z, float zNear, float zFar)
+{
+#if 1
+	z = (zNear + z) / zFar;
+#endif
+	return z;
+}
+
+struct vs_output {
+   float4 Pos: POSITION;
+   float3 Depth: TEXCOORD0;
+};
+
+
+float4 psMain(in vs_output In) : COLOR
+{
+	//return float4(zNear / zFar + In.Depth / zFar, 0.0f, 0.0f, 0.0f);
+	return StoreZValueToColor(In.Depth.x, In.Depth.y, In.Depth.z);
+	//return float4(0.5f, 0.0f, 0.0f, 0.0f);
+	//return float4(In.Depth.xxx / In.Depth.yyy, 1);
+}

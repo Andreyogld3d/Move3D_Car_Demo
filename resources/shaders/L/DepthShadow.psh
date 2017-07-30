@@ -1,0 +1,6 @@
+<!--3DMove-->
+<PixelShader>
+	PixelShader DepthShadowPS/
+	EntryPoint psMain/
+	SourceFile L\DepthShadowPS.hlsl/
+</PixelShader>

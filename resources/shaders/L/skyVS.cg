@@ -1,0 +1,29 @@
+//
+uniform float4x4 worldViewProj : register(c0);		// произведение World * View * Projection
+uniform float time : register(c4);		// просто переменная	
+
+struct PS {
+	float4 position  : POSITION;
+    float2 texCoord0 : TEXCOORD0;    
+    float2 texCoord1 : TEXCOORD1;
+    float2 intensity : TEXCOORD2;
+	float3 localPos  : TEXCOORD3;
+};
+
+//////////////////////////////////////////////////////////////
+//Vertex Shader
+//////////////////////////////////////////////////////////////
+PS vsMain(in float4 position : POSITION, in float2 texCoord0 : TEXCOORD0) 
+{
+	PS OUT;
+	OUT.position = half4(mul(position, worldViewProj));
+	float Time = time / 22.0f;
+	static float4 bbox = {2.0f, 0.3f, 2.0f, 1.0f};	
+	OUT.intensity.x    = position.y / bbox.y;
+   	OUT.intensity.x    = exp(clamp(OUT.intensity.x, 0.0f, 1.0f)) / 1.8f;
+   	OUT.intensity.y = OUT.intensity.x * OUT.intensity.x;   	
+   	OUT.texCoord0 = float2(position.x / 2.0f + Time, position.z / 1.0f);
+   	OUT.texCoord1 = float2(position.x + Time / 2.0f, position.z);
+	OUT.localPos = position.xyz;
+   	return OUT;
+}
