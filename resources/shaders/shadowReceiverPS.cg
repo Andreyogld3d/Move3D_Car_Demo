@@ -1,0 +1,77 @@
+//
+
+#define PCF
+
+#define LIGHT
+#define SPECULAR
+#define FADE_SHADOW
+
+#if 0
+uniform sampler2D tex1 : register(s0);
+uniform sampler2D tex2 : register(s1);
+uniform sampler2D ShadowMap : register(s2);
+#else
+DeclTex2D(tex1, 0);
+DeclTex2D(tex2, 1);
+DeclTex2D(ShadowMap, 2);
+
+#endif
+
+struct VS_OUTPUT {
+   float4 Pos:       POSITION;
+   float2 texCoord: TEXCOORD0;
+   float4 shadowCrd: TEXCOORD1;
+#ifdef LIGHT
+	float3 Normal:    TEXCOORD2;
+	float3 LightDir: TEXCOORD3;
+#ifdef SPECULAR
+	float3 ViewDir : TEXCOORD4;
+#ifdef FADE_SHADOW
+	float scaleShadowColor : TEXCOORD5;
+#endif
+#endif
+#endif
+};
+
+float4 psMain(in VS_OUTPUT In) : COLOR 
+{  
+	float4 Color1 = tex2D(tex1, In.texCoord); 
+	float4 Color2 = tex2D(tex2, In.texCoord);
+	float4 Color = Color1 * Color2;
+#ifdef LIGHT
+	const float SMColor = 0.2f;
+	float shadowColor = SMColor;
+	float4 shadowCrd = In.shadowCrd;
+#ifdef PCF
+	float sh = PCFFilter(4.0, ShadowMap, shadowCrd, shadowColor);
+#else
+	shadowCrd.xyz /= shadowCrd.w;
+	// The depth of the fragment closest to the light
+	float shadow = tex2D(ShadowMap, shadowCrd.xy).r;
+	float sh = shadow < shadowCrd.z - 0.001f ? shadowColor : 1.0;
+#endif
+#ifdef FADE_SHADOW
+	float maxVal = 1.0f / SMColor;
+	float Scale = clamp(In.scaleShadowColor, 1.0f, maxVal);
+	shadowColor = Scale * shadowColor;
+	shadowColor = clamp(shadowColor, SMColor, 0.6f);
+#endif
+	float3 LightDir = -normalize(In.LightDir);
+	float3 Normal = normalize(In.Normal);
+	const float Ambient = 0.4f;
+   	float Diffuse = saturate(dot(Normal, LightDir));
+	float factor = Diffuse * sh + Ambient;
+#ifdef SPECULAR
+	if (Diffuse > 0.0f) {
+		float3 viewDir = normalize(In.ViewDir);
+		float3 halfVector = normalize(viewDir + Normal);
+		
+		float specFactor = pow(saturate(dot(LightDir, halfVector)), 20);
+		factor += specFactor;
+	}
+#endif
+	return Color * factor;
+#else
+	return Color;
+#endif
+}

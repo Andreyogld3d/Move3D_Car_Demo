@@ -1,0 +1,23 @@
+<!--3DMove-->
+<Material MaterialName = "Terrain" LightEnabled = "false" >
+	<TextureSampler
+		FileName = "resources/texture/grass_green-03.dds"
+		MinFilter = "Anisotropic"
+		MagFilter = "Anisotropic"
+	  	MipFilter = "Anisotropic"
+		MaxAnisotropy = "16"
+	/>
+	<TextureSampler
+		FileName = "resources/texture/detail_undertree.dds"
+		MinFilter = "Anisotropic"
+		MagFilter = "Anisotropic"
+	  	MipFilter = "Anisotropic"
+		MaxAnisotropy = "16"
+	/>
+	<_ShadowReceiverVertexShader FileName = "ShadowReceiverVS.vsh" />
+	<_ShadowReceiverPixelShader FileName = "ShadowReceiverPS.psh" />
+	<ShadowCasterVertexShader FileName = "ShadowReceiverVS.vsh" />
+	<ShadowCasterPixelShader FileName = "ShadowReceiverPS.psh" />
+	<DepthPassVertexShader FileName = "DepthPassVS.vsh" />
+	<DepthPassPixelShader FileName = "DepthPassPS.psh" />
+</Material>
