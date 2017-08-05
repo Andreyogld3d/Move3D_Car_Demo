@@ -26,8 +26,8 @@ struct PixelInput
     float3 tangent : TEXCOORD5;
     float3 worldReflection : TEXCOORD6;
 
-    float4 roughnessL0 : TEXCOORD7;
-    float4 roughnessL1 : TEXCOORD8;
+    float roughnessL0 : TEXCOORD7;
+    float roughnessL1 : TEXCOORD8;
 
 
 /*#ifdef ALPAHA_TEST

@@ -9,18 +9,21 @@ uniform float4 LightDir : register(c8);
 uniform float4 CameraPosition : register(c9);
 uniform float4 test : register(c10);
 
+uniform float roughness0;
+uniform float roughness1;
+
+#ifndef INSTANSING
+uniform float4x4 WorldMatrix;
+#endif
 
 
 
-
- 
 PixelInput vsMain(VertexInput input){
 
     PixelInput vsOut;
-    input.position.xyz += test.xyz;
 
-    vsOut.roughnessL0 = test;
-    vsOut.roughnessL1 = test;
+    vsOut.roughnessL0 = roughness0;
+    vsOut.roughnessL1 = roughness1;
     
 
     input.normal = normalize(input.normal); //TODO: remove me after tests
@@ -49,6 +52,7 @@ PixelInput vsMain(VertexInput input){
 	vsOut.lightDir = -LightDir.xyz;
 
 
+  //  vsOut.worldReflection = abs(frac(WorldPos.xyz));
     vsOut.worldReflection = -normalize(reflect(vsOut.viewDir, vsOut.normal));
 
 
