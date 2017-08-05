@@ -13,8 +13,6 @@
 #include <algorithm>
 #include <array>
 
-#include "RawInput.h"
-
 #ifdef _DEBUG
 #pragma comment(lib, "./Move3D/3DMoveEngined.lib")
 #pragma comment(lib, "./Move3D/lib/pugixml/lib/msvc2015/debug/pugixml.lib")
