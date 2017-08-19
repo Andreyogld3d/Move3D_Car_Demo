@@ -273,7 +273,7 @@ struct ShaderParameterEditor : public EditorGroup, public IEditorValueChanged {
 private:
 	IDisplayedObject* _object;
 	void apply() {
-		_object->GetObjectMaterial()->SetShaderConstantValue(name.c_str(), &value[0], value.size());
+		_object->GetObjectMaterial()->SetShaderConstantValue(name, &value[0], value.size());
 	}
 	ShaderParameterEditor(IDisplayedObject* object, const char* name, size_t size) :_object(object) {
 		this->name = name;

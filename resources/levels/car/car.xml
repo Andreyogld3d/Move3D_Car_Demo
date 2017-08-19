@@ -1,4 +1,4 @@
-<Level LevelName="Car" CameraPosition="281.0 3.0 242.0" CameraHeight="10.0" Terrain="levels/car/terrain.cfg" AmbientValue="1.0 1.0 1.0 1.0">
+<Level LevelName="Car" CameraPosition="281.0 3.0 242.0" CameraHeight="10.0" Terrain="resources/levels/car/terrain.cfg" AmbientValue="1.0 1.0 1.0 1.0">
     <Camera Name = "TestCamera" Position = "321.0 3.0 193.0" Rotation = "20 20 30" Speed = "8.0" Fov = "45.0"/>
     <ShadowMapDescription zNear="1.0" zFar="2000.0" ViewHeight="450.0" ViewWidth="450.0" LightDir = "0.66341400 -0.64278764 -0.38302219" TextureStage="4" />
     <Sky Material="LSky.mat" />
