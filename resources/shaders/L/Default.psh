@@ -3,6 +3,8 @@
 	PixelShader ShadowCasterPS/
 	EntryPoint psMain/
 	SourceFile L\DefaultPs.hlsl/
-
+    <VertexShaderParameters>
+        ParamName metallic1 float 0.7/
+    </VertexShaderParameters>
    
 </PixelShader>

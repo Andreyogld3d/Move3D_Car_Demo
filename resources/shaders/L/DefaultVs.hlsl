@@ -9,8 +9,7 @@ uniform float4 LightDir : register(c8);
 uniform float4 CameraPosition : register(c9);
 uniform float4 test : register(c10);
 
-uniform float roughness0;
-uniform float roughness1;
+uniform float4 materialParams0;
 
 #ifndef INSTANSING
 uniform float4x4 WorldMatrix;
@@ -22,9 +21,7 @@ PixelInput vsMain(VertexInput input){
 
     PixelInput vsOut;
 
-    vsOut.roughnessL0 = roughness0;
-    vsOut.roughnessL1 = roughness1;
-    
+    vsOut.materialParams0 = materialParams0;
 
     input.normal = normalize(input.normal); //TODO: remove me after tests
 

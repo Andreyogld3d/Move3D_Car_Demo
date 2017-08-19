@@ -29,8 +29,10 @@
 	/>
   <DepthShadowMapPixelShader FileName = "L/DepthShadow.psh"/>
 	<DepthShadowMapVertexShader FileName = "L/DepthShadow.vsh"/>
+  
 	<ShadowCasterPixelShader FileName = "L/Default.psh"/>
 	<ShadowCasterVertexShader FileName = "L/Default.vsh"/>
+  
 	<DepthPassVertexShader FileName = "DepthPassVS.vsh" />
 	<DepthPassPixelShader FileName = "DepthPassPS.psh" />
 	<Fog FogColor = "0.8f 0.9f 0.8f 1.0f" FogDensity = "0.08f" />

@@ -13,6 +13,8 @@ TEXTURE2D(skySpecular, 2);
 
 float4x4 MOVE3D_MATRIX_W : register(c0);
 
+
+
 float3 readIbl(float3 dir, float level){
     float2 uv = RadialCoords(dir);
     uv = FixupSphericalCoordSeam(uv);
@@ -28,7 +30,6 @@ float3 readIblSpecular(float3 dir, float level){
 }
 
 float4 psMain(in PixelInput In) : COLOR {
-
     float3 light_color = float3(1.0f, 1.0f, 0.92f);
     float3 ambient_color = float3(0.03f, 0.03f, 0.08f);
 
@@ -40,7 +41,8 @@ float4 psMain(in PixelInput In) : COLOR {
 	}
 #endif
 
-    float shadow = sampleShadowPCF(2, In.SHADOW_COORD_NAME);
+    float shadow = 0;
+    //sampleShadowPCF(2, In.SHADOW_COORD_NAME);
 
     float3 L = normalize(In.lightDir);
     float3 V = normalize(In.viewDir);
@@ -55,28 +57,34 @@ float4 psMain(in PixelInput In) : COLOR {
    // float3 layer1Color = float3(1.0f, 0.765557f, 0.336057f);
     float3 layer1Color = 0.9f;
 
-    float metallic = 0.0f;
+
     float layer1Weight = 1.0f;
 
 
-    float f0 = 0.99f;
+    float roughnessL0 = In.materialParams0.x;
+    float roughnessL1 = In.materialParams0.y;
+    float metallic = In.materialParams0.z;
+    float fresnelIOR = In.materialParams0.w;
+
+
+    float f0 = fresnelIOR;
 
     float G_specular = G_CookTorrance(L, N, H, V);
     float F_specular = F_Schlick(f0, V, H);
-    float D_specular0 = D_GGXIsotropic(N, H, In.roughnessL0);
-    float D_specular1 = D_GGXIsotropic(N, H, In.roughnessL1);
+    float D_specular0 = D_GGXIsotropic(N, H, roughnessL0);
+    float D_specular1 = D_GGXIsotropic(N, H, roughnessL1);
     float kSpecular0 = BRDF_CookTorrance(L, N, V, D_specular0, F_specular, G_specular);
 
     float kSpecular1 = BRDF_CookTorrance(L, N, V, D_specular1, 1, G_specular); //TODO: use conductor Fresnel instead of 1
 
 
-    float3 skyColorSpecular = readIblSpecular(In.worldReflection, pow(In.roughnessL0, 0.5f) * 8);
+    float3 skyColorSpecular = readIblSpecular(In.worldReflection, pow(roughnessL1, 0.5f) * 8);
 
-    return float4(skyColorSpecular, 1);
+   // return float4(skyColorSpecular, 1);
 
-    float3 skyColor = readIbl(In.worldReflection, pow(In.roughnessL1, 0.5f) * 8);
+    float3 skyColor = readIbl(In.worldReflection, pow(roughnessL0, 0.5f) * 8);
 
-    float3 layer1Metallic = (layer1Color * albedo.rgb) * (skyColor.rgb + kSpecular1 * shadow * light_color);
+    float3 layer1Metallic = (layer1Color * albedo.rgb) * (skyColorSpecular.rgb + kSpecular1 * shadow * light_color);
 
     
     float F_specularIBL = F_Schlick(f0, V, N);
