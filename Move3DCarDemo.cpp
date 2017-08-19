@@ -297,6 +297,9 @@ struct EditableObject : public EditorGroup {
 		auto result = std::shared_ptr<EditableObject>(new EditableObject(object));
 		result->name = object->GetObjectName();
 
+		auto color1 = ShaderParameterEditor::create(object, "layer1Color", 4); 
+		result->addItem(color1);
+
 		auto fresnel = ShaderParameterEditor::create(object, "materialParams0", 4);
 		result->addItem(fresnel);
 
@@ -322,9 +325,23 @@ struct EditableObject : public EditorGroup {
 
 		auto fresnelIOR = std::static_pointer_cast<FloatEditor>(params[3]);
 		fresnelIOR->name = "fresnelIOR";
-		fresnelIOR->min = 0.5;
+		fresnelIOR->min = 0;
 		fresnelIOR->max = 4;
 		fresnelIOR->setValue(1.0f);
+
+
+
+		auto params1 = ShaderParameterEditor::create(object, "materialParams1", 4);
+		result->addItem(params1);
+
+		auto params1Elements = params1->getItems();
+
+		auto ks = std::static_pointer_cast<FloatEditor>(params1Elements[0]);
+		ks->name = "kS";
+		ks->min = 0;
+		ks->max = 1;
+		ks->setValue(0.5f);
+
 
 		return result;
 	}

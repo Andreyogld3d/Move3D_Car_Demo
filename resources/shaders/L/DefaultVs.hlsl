@@ -10,6 +10,8 @@ uniform float4 CameraPosition : register(c9);
 uniform float4 test : register(c10);
 
 uniform float4 materialParams0;
+uniform float4 materialParams1;
+uniform float4 layer1Color;
 
 #ifndef INSTANSING
 uniform float4x4 WorldMatrix;
@@ -22,6 +24,9 @@ PixelInput vsMain(VertexInput input){
     PixelInput vsOut;
 
     vsOut.materialParams0 = materialParams0;
+    vsOut.materialParams1 = materialParams1;
+    vsOut.layer1Color = layer1Color;
+    //layer1Color;
 
     input.normal = normalize(input.normal); //TODO: remove me after tests
 

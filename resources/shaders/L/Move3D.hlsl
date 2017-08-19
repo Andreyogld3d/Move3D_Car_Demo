@@ -27,6 +27,8 @@ struct PixelInput
     float3 worldReflection : TEXCOORD6;
 
     float4 materialParams0 : TEXCOORD7;
+    float4 materialParams1 : COLOR;
+	float4 layer1Color : COLOR1;
 
 /*#ifdef ALPAHA_TEST
 	//float AlphaRef :  TEXCOORD4;

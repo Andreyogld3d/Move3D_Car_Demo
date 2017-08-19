@@ -30,7 +30,7 @@ float3 readIblSpecular(float3 dir, float level){
 }
 
 float4 psMain(in PixelInput In) : COLOR {
-    float3 light_color = float3(1.0f, 1.0f, 0.92f);
+  
     float3 ambient_color = float3(0.03f, 0.03f, 0.08f);
 
     float4 albedo = tex2D(albedoMap, In.uv0);
@@ -41,7 +41,7 @@ float4 psMain(in PixelInput In) : COLOR {
 	}
 #endif
 
-    float shadow = 0;
+    float shadow = 1;
     //sampleShadowPCF(2, In.SHADOW_COORD_NAME);
 
     float3 L = normalize(In.lightDir);
@@ -55,7 +55,7 @@ float4 psMain(in PixelInput In) : COLOR {
 
 
    // float3 layer1Color = float3(1.0f, 0.765557f, 0.336057f);
-    float3 layer1Color = 0.9f;
+    float3 layer1Color = In.layer1Color.rgb;
 
 
     float layer1Weight = 1.0f;
@@ -66,6 +66,9 @@ float4 psMain(in PixelInput In) : COLOR {
     float metallic = In.materialParams0.z;
     float fresnelIOR = In.materialParams0.w;
 
+    float3 light_color = float3(1.0f, 1.0f, 0.82f) *0.1f;
+
+    float kS = In.materialParams1.x;
 
     float f0 = fresnelIOR;
 
@@ -102,13 +105,5 @@ float4 psMain(in PixelInput In) : COLOR {
 
     float3 layer0 = kSpecular0 * shadow * light_color + skyColor.rgb * F_specularIBL;
 
-
-   // 
-
-    //return shadow;
-    return float4(lerp(layer0, layer1, layer1Weight), 0);
-
-
-
-	
+    return float4(lerp(layer1, layer0, kS), 0);
 }
