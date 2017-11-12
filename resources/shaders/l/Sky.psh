@@ -1,0 +1,7 @@
+	<PixelShader>
+		PixelShader PSSky/
+		Language cg/
+		EntryPoint psMain/
+		SourceFile L\sky.hlsl/
+		Profile ps_2_0 glslf/
+	</PixelShader>
