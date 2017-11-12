@@ -80,12 +80,13 @@ float4 psMain(in PixelInput In) : COLOR {
 
     float kSpecular1 = BRDF_CookTorrance(L, N, V, D_specular1, 1, G_specular); //TODO: use conductor Fresnel instead of 1
 
+    float skyMultiplier = 1.5f;
 
-    float3 skyColorSpecular = readIblSpecular(In.worldReflection, pow(roughnessL1, 0.5f) * 8);
+    float3 skyColorSpecular = readIblSpecular(In.worldReflection, pow(roughnessL1, 0.5f) * 8) * skyMultiplier;
 
    // return float4(skyColorSpecular, 1);
 
-    float3 skyColor = readIbl(In.worldReflection, pow(roughnessL0, 0.5f) * 8);
+    float3 skyColor = readIbl(In.worldReflection, pow(roughnessL0, 0.5f) * 8) * skyMultiplier;
 
     float3 layer1Metallic = (layer1Color * albedo.rgb) * (skyColorSpecular.rgb + kSpecular1 * shadow * light_color);
 
