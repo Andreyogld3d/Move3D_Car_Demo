@@ -1,5 +1,6 @@
 <!--3DMove-->
 <Material EnableCullFace = "false" EnableWriteDepth="false">
+<!--
   <VertexShader>
     VertexShader VSSky/
     EntryPoint vsMain/
@@ -16,6 +17,9 @@
 		SourceFile L\sky.hlsl/
 		Profile ps_2_0 glslf/
 	</PixelShader>
+-->
+	<VertexShader FileName = "L/Sky.vsh"/>
+	<PixelShader FileName = "L/Sky.psh"/>
 	<TextureSampler TexCoordIndex = "0" _TextureAdressU = "Wrap" _TextureAdressV = "Wrap"
 		FileName = "resources/texture/SkyDiffuseMap.dds"
 		MinFilter = "Anisotropic"

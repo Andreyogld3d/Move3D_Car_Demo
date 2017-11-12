@@ -18,13 +18,13 @@
 
 #ifdef _DEBUG
 #pragma comment(lib, "./Move3D/3DMoveEngined.lib")
-#pragma comment(lib, "./Move3D/lib/pugixml/lib/msvc2015/debug/pugixml.lib")
+#pragma comment(lib, "./Move3D/lib/pugixml/lib/msvc2017/debug/pugixml.lib")
 #else
 #pragma comment(lib, "./Move3D/3DMoveEngine.lib")
-#pragma comment(lib, "./Move3D/lib/pugixml/lib/msvc2015/pugixml.lib")
+#pragma comment(lib, "./Move3D/lib/pugixml/lib/msvc2017/pugixml.lib")
 #endif
 
-#pragma comment(lib, "./Move3D/lib/lua/lib/msvc2015/lua.lib")
+#pragma comment(lib, "./Move3D/lib/lua/lib/msvc2017/lua.lib")
 #pragma comment(lib, "./Move3D/lib/glew/lib/glew32.lib")
 #pragma comment(lib, "./Move3D/lib/directx/lib/dxerr.lib")
 
