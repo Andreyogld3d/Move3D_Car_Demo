@@ -3,37 +3,37 @@
     <ShadowMapDescription zNear="1.0" zFar="2000.0" ViewHeight="450.0" ViewWidth="450.0" LightDir = "0.66341400 -0.64278764 -0.38302219" TextureStage="4" />
     <Sky Material="LSky.mat" />
 	
-  <SceneObject Name="Car_body" Position="291.0 0.0 245.0" InstanceGroup = "7" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
+  <SceneObject Name="Car_body" Position="291.0 0.0 245.0" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
     <MeshName TangentBinormal="1" FileName="Car_0.lev" />
   </SceneObject>
-  <SceneObject Name="Car_metal" Position="291.0 0.0 245.0" InstanceGroup = "7" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
+  <SceneObject Name="Car_metal" Position="291.0 0.0 245.0" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
     <MeshName TangentBinormal="1" FileName="Car_1.lev" />
   </SceneObject>
-  <SceneObject Name="Car_chrome" Position="291.0 0.0 245.0" InstanceGroup = "7" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
+  <SceneObject Name="Car_chrome" Position="291.0 0.0 245.0" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
     <MeshName TangentBinormal="1" FileName="Car_2.lev" />
   </SceneObject>
 
-  <SceneObject Name="Car_plastic" Position="291.0 0.0 245.0" InstanceGroup = "7" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
+  <SceneObject Name="Car_plastic" Position="291.0 0.0 245.0" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
     <MeshName TangentBinormal="1" FileName="Car_3.lev" />
   </SceneObject>
 
-  <SceneObject Name="Car_glass" Position="291.0 0.0 245.0" InstanceGroup = "7" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
+  <SceneObject Name="Car_glass" Position="291.0 0.0 245.0" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
     <MeshName TangentBinormal="1" FileName="Car_4.lev" />
   </SceneObject>
 
-  <SceneObject Name="Car_rubber" Position="291.0 0.0 245.0" InstanceGroup = "7" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
+  <SceneObject Name="Car_rubber" Position="291.0 0.0 245.0" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
     <MeshName TangentBinormal="1" FileName="Car_5.lev" />
   </SceneObject>
 
-  <SceneObject Name="Car_aluminium" Position="291.0 0.0 245.0" InstanceGroup = "7" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
+  <SceneObject Name="Car_aluminium" Position="291.0 0.0 245.0" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
     <MeshName TangentBinormal="1" FileName="Car_6.lev" />
   </SceneObject>
 
-  <SceneObject Name="Car_wtf1" Position="291.0 0.0 245.0" InstanceGroup = "7" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
+  <SceneObject Name="Car_wtf1" Position="291.0 0.0 245.0" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
     <MeshName TangentBinormal="1" FileName="Car_7.lev" />
   </SceneObject>
   
-  <SceneObject Name="Car_wtf2" Position="291.0 0.0 245.0" InstanceGroup = "7" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
+  <SceneObject Name="Car_wtf2" Position="291.0 0.0 245.0" Rotate="0.0 0.0 0.0" Scale="10.0" CollisionEnabled="1" HardwareOcclusion = "true" Occluder="0">
     <MeshName TangentBinormal="1" FileName="Car_8.lev" />
   </SceneObject>
 </Level>
