@@ -1,14 +1,6 @@
 #ifndef MOVE3D_INSTANCING_INCLUDE__
 #define MOVE3D_INSTANCING_INCLUDE__
 
-//Patch incorrect naming
-#ifdef INSTANSING
-    #ifndef INSTANCING
-        #define INSTANCING
-    #endif
-#endif
-
-
 #ifdef INSTANCING
 
     #define VERTEX_INSTANCE_DATA \
