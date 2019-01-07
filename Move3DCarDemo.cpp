@@ -6,6 +6,8 @@
 #include "Move3D/IScene.h"
 #include "Move3D/IDisplayedObject.h"
 #include "Move3D/IMaterial.h"
+#include "Move3D/IUserInputCallback.h"
+#include "Move3D/IGizmos.h"
 
 #include <iostream>
 #include <vector>
@@ -28,7 +30,11 @@
 #pragma comment(lib, "./Move3D/lib/glew/lib/glew32.lib")
 #pragma comment(lib, "./Move3D/lib/directx/lib/dxerr.lib")
 
+//#define USE_USER_INPUT_CALLBACK
+
+#ifndef USE_USER_INPUT_CALLBACK
 LRESULT CALLBACK MessageProc(int code, WPARAM wParam, LPARAM lParam);
+#endif
 
 namespace EditorKeys {
 	static constexpr std::array<WPARAM, 3> MoveBack = { VK_LEFT, VK_NUMPAD4, VK_BACK };
@@ -56,7 +62,7 @@ namespace EditorKeys {
 	}
 }
 
-struct Editor : public std::enable_shared_from_this<Editor>{
+struct Editor : public std::enable_shared_from_this<Editor> {
 	std::string name;
 	std::shared_ptr<Editor> parent = nullptr;
 
@@ -349,7 +355,11 @@ private:
 	EditableObject(IDisplayedObject* object) :_object(object) {	}
 };
 
+#ifdef USE_USER_INPUT_CALLBACK
+struct EngineCallback : public IUserCallback, public IUserInputCallback {
+#else
 struct EngineCallback : public IUserCallback {
+#endif
 	void Update(float dt) override {
 		_time += dt;
 
@@ -382,8 +392,18 @@ struct EngineCallback : public IUserCallback {
 		_activeEditor->onEnter();
 
 		loadState();
-
+#ifndef USE_USER_INPUT_CALLBACK
 		_inputHook = SetWindowsHookEx(WH_GETMESSAGE, MessageProc, GetModuleHandle(nullptr), GetCurrentThreadId());
+#endif
+	}
+
+	IUserInputCallback* GetUserInputCallback()
+	{
+#ifdef USE_USER_INPUT_CALLBACK
+		return this;
+#else
+		return nullptr;
+#endif
 	}
 
 	const char* stateFileName = "settings_dump.txt";
@@ -424,13 +444,15 @@ struct EngineCallback : public IUserCallback {
 				_activeEditor = _activeEditor->parent;
 				_activeEditor->onEnter();
 			}
-		}else if (EditorKeys::FindKey(EditorKeys::MoveForward, key)) {
+		}
+		else if (EditorKeys::FindKey(EditorKeys::MoveForward, key)) {
 			auto next = _activeEditor->getNext();
 			if (next != nullptr) {
 				_activeEditor = next;
 				_activeEditor->onEnter();
 			}
-		}else if (EditorKeys::FindKey(EditorKeys::ExportValues, key)) {
+		}
+		else if (EditorKeys::FindKey(EditorKeys::ExportValues, key)) {
 			saveState();
 		}
 		else if (EditorKeys::FindKey(EditorKeys::ImportValues, key)) {
@@ -444,17 +466,35 @@ struct EngineCallback : public IUserCallback {
 	void onKeyReleased(WPARAM key) {
 		_activeEditor->onKeyRelease(key);
 	}
-
+#ifdef USE_USER_INPUT_CALLBACK
+	// notification about key pressing, returns the pressed key
+	virtual void NotifyKeyPressed(uint key)
+	{
+		onKeyPressed(key);
+	}
+	// notification about key releasing, returns the released key
+	virtual void NotifyKeyReleased(uint key)
+	{
+		onKeyReleased(key);
+	}
+	// notification about mouse mouving, returns the cursor position.
+	virtual void NotifyMouseMoved(uint x, uint y)
+	{
+	}
+#endif
 private:
 	float _time = 0;
 	IScene* _scene = nullptr;
+#ifndef USE_USER_INPUT_CALLBACK
 	HHOOK _inputHook = nullptr;
+#endif
 	std::shared_ptr<Editor> _activeEditor = nullptr;
 	std::shared_ptr<EditorGroup> _rootEditor;
 };
 
 EngineCallback callback;
 
+#ifndef USE_USER_INPUT_CALLBACK
 //Message proc hook -> because no engine input interfaces available at the moment
 LRESULT CALLBACK MessageProc(int code, WPARAM wParam, LPARAM lParam) {
 	if (code == HC_ACTION) {
@@ -468,6 +508,7 @@ LRESULT CALLBACK MessageProc(int code, WPARAM wParam, LPARAM lParam) {
 	}
 	return CallNextHookEx(0, code, wParam, lParam);
 }
+#endif
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) {
 	IEngine* engine = IEngine::GetEngine();
