@@ -23,7 +23,7 @@
     <ProjectGuid>{8A381C1C-B6E1-4E8A-A88F-234FF5A33336}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Move3DCarDemo</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
